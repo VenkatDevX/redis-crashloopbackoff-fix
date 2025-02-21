@@ -12,12 +12,6 @@ The Redis pods deployed using Helm charts in AKS went into `CrashLoopBackOff`. I
   ```
   **Error:** `pods "redis-client" not found`
 
-- Attempted to access the Redis liveview node and encountered an issue due to incorrect pod selection:
-  ```sh
-  kubectl exec -it redis-liveview-node-0 -n dummy -c sentinel -- /bin/bash
-  ```
-  **Error:** `container sentinel is not valid for pod redis-liveview-node-0`
-
 - Corrected the command and successfully accessed the pod:
   ```sh
   kubectl exec -it redis-liveview-node-0 -n dummy -c sentinel -- /bin/bash
@@ -53,10 +47,15 @@ The Redis pods deployed using Helm charts in AKS went into `CrashLoopBackOff`. I
   ```sh
   redis-check-aof --fix appendonly.aof.609.incr.aof
   ```
-  **Output:**
-  - Found format error in `appendonly.aof.609.incr.aof`
-  - Shrunk AOF file from `115158427 bytes` to `113451313 bytes`
-  - Successfully truncated the AOF file
+**Output**:
+```
+Start checking Old-Style AOF
+AOF appendonly.aof.609.incr.aof format error
+AOF analyzed: filename=appendonly.aof.609.incr.aof, size=115158427, ok_up_to=113451313, ok_up_to_line=1176, diff=1707114
+This will shrink the AOF appendonly.aof.609.incr.aof from 115158427 bytes, with 1707114 bytes, to 113451313 bytes
+Continue? [y/N]: y
+Successfully truncated AOF appendonly.aof.609.incr.aof
+```
 
 #### 4. Exiting and Verifying Redis Pod Status
 - Exited the Redis pod:
